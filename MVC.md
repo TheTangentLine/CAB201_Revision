@@ -125,4 +125,4 @@ class TravellerController {
 }
 ```
 
-In the above example, the fat controller is doing the Model's job **and** the View's job. If a second controller (e.g. a mobile app) also needs to book flights, the 500-point rule has to be copied there too, and sooner or later the copies won't match. With a fat model, the rule lives in one place and every controller just calls `BookFlight`.
+In the above example, the fat controller is doing the Model's job **and** the View's job. If another feature (e.g. "Change flight") also needs to book, the 500-point rule has to be copied into that controller too. Change the rule later and every copy must be updated. With a fat model, the rule lives in one place and every controller just calls `BookFlight`.

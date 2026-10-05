@@ -76,7 +76,7 @@ It works, so what's the problem?
 | We read the controller          | It does the DB's job, the Model's job (rules) **and** the View's job (printing). That's a **fat controller** |
 | We look at Traveller and Flight | Just data, no behaviour. That's the **anemic model**, and anyone can set `Points = -1000`                 |
 | We want to test the booking rules | We can't without filling a real DB first, because the rules are tangled with storage                    |
-| A second app (e.g. mobile) needs booking | The rules get copied, and sooner or later the copies don't match                                 |
+| Another feature (e.g. "Change flight") needs the same checks | The rules get copied into that controller too. Change a rule later and every copy must be updated, miss one = bug |
 
 ### The tempting fix (also wrong)
 
