@@ -25,7 +25,7 @@ _Example:_
 
 ```csharp
 // -------- Bad practice ---------
-class Person {
+class PersonAtSchool {
     public void Study() {
         Console.WriteLine("I'm studying.");
     }
