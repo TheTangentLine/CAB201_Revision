@@ -17,12 +17,88 @@ A worked example that uses [OOP](OOP.md), [SOLID](SOLID.md) and [MVC](MVC.md) to
 
 ## The problem
 
-Common assignment setup: _"use an in-memory DB for now, switch to a relational DB later"_. And BookFlight now has to check the DB: does the flight exist, and are there seats left?
+A common assignment brief looks like this:
 
-The questions are:
+> _"Use an in-memory DB for now. Later in the semester, switch to a relational DB."_
 
-- **Who holds the DB?** Not the Model. A Traveller shouldn't know where it's stored (S in SOLID, and MVC keeps the Model clean).
-- **So how does the Model check the DB?** It doesn't. Someone else **loads** the data first, then **passes** it to the Model so the Model can decide.
+And the feature we need is **booking a flight**:
+
+- The flight code must **exist** in the DB.
+- The flight must have **seats left**.
+- The traveller must have **enough points**.
+- If everything is OK, take the points, take a seat, and **save** both.
+
+### The naive way
+
+The first thing most people write: one global DB class, and the controller does everything.
+
+```csharp
+// -------- Bad practice ---------
+class InMemoryDB {
+    public static List<Traveller> Travellers = new List<Traveller>();
+    public static List<Flight> Flights = new List<Flight>();
+}
+
+class Traveller {
+    public int Id { get; set; }
+    public int Points { get; set; }
+}
+
+class Flight {
+    public string Code { get; set; }
+    public int Cost { get; set; }
+    public int SeatsLeft { get; set; }
+}
+
+class TravellerController {
+    public void Book(int travellerId, string flightCode) {
+        Flight flight = InMemoryDB.Flights.Find(f => f.Code == flightCode);
+        if (flight == null) { Console.WriteLine("Flight not found."); return; }
+        if (flight.SeatsLeft <= 0) { Console.WriteLine("Flight is full."); return; }
+
+        Traveller traveller = InMemoryDB.Travellers.Find(t => t.Id == travellerId);
+        if (traveller.Points < flight.Cost) { Console.WriteLine("Not enough points."); return; }
+
+        traveller.Points -= flight.Cost;
+        flight.SeatsLeft--;
+        Console.WriteLine("Booked " + flightCode + "!");
+    }
+}
+```
+
+It works, so what's the problem?
+
+### What goes wrong
+
+| When...                         | What happens                                                                                              |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| We switch to the relational DB  | Every line that says `InMemoryDB` has to be rewritten, in **every** controller                            |
+| We read the controller          | It does the DB's job, the Model's job (rules) **and** the View's job (printing). That's a **fat controller** |
+| We look at Traveller and Flight | Just data, no behaviour. That's the **anemic model**, and anyone can set `Points = -1000`                 |
+| We want to test the booking rules | We can't without filling a real DB first, because the rules are tangled with storage                    |
+| A second app (e.g. mobile) needs booking | The rules get copied, and sooner or later the copies don't match                                 |
+
+### The tempting fix (also wrong)
+
+"Fine, let's move the logic into the Model". But BookFlight needs to check the DB, so the Model gets a DB attribute:
+
+```csharp
+// -------- Bad practice ---------
+class Traveller {
+    private IDB db; // every Traveller now carries a DB around
+    // ...
+}
+```
+
+This feels weird, and it is. The Traveller now has 2 jobs (rules **and** storage), which breaks S in SOLID. It also breaks MVC, where the Model should know nothing about storage.
+
+### The questions
+
+So we need answers to:
+
+- **Who holds the DB?** Not the Model. A **repository** handles storage. For a simple action the Controller can use it directly, but booking touches 2 repositories, so a **service** uses them instead ([Step 1](#step-1-repository-one-small-interface-per-type), [Step 3](#step-3-a-service-does-load--decide--save)).
+- **So how does the Model check the DB?** It doesn't. Someone else **loads** the data first, then **passes** it to the Model so the Model can decide ([Step 2](#step-2-the-model-gets-the-data-not-the-db)).
+- **How do we switch DBs without rewriting everything?** Everyone depends on an **interface**, and the real DB is plugged in once in Main ([Step 4](#step-4-wire-everything-up-in-main-di)).
 
 > [!IMPORTANT]
 > The Model never touches the DB: **load → let the Model decide → save**.
