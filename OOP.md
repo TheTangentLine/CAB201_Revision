@@ -38,6 +38,15 @@ _`-` means private, `+` means public._
 _Example:_
 
 ```csharp
+// -------- Bad practice ---------
+class Traveller {
+    public int points;
+}
+
+traveller.points = -1000; // nothing stops this
+```
+
+```csharp
 // -------- Good practice ---------
 class Traveller {
     private int points;
@@ -49,16 +58,9 @@ class Traveller {
         return points;
     }
 }
-
-// -------- Bad practice ---------
-class Traveller {
-    public int points;
-}
-
-traveller.points = -1000; // nothing stops this
 ```
 
-In the above example, the good Traveller only changes points through AddPoints, which blocks negative values. The bad Traveller lets anyone set points to anything.
+In the above example, the bad Traveller lets anyone set points to anything. The good Traveller only changes points through AddPoints, which blocks negative values.
 
 ## Abstraction
 
@@ -84,6 +86,17 @@ classDiagram
 _Example:_
 
 ```csharp
+// -------- Bad practice ---------
+class CreditCard {
+    public void ConnectToBank() { /* ... */ }
+    public void Charge(double amount) { /* ... */ }
+}
+
+card.ConnectToBank(); // caller has to know every step, in the right order
+card.Charge(100);
+```
+
+```csharp
 // -------- Good practice ---------
 interface IPayment {
     void Pay(double amount);
@@ -100,18 +113,9 @@ class CreditCard : IPayment {
 
 IPayment payment = new CreditCard();
 payment.Pay(100); // caller only sees Pay()
-
-// -------- Bad practice ---------
-class CreditCard {
-    public void ConnectToBank() { /* ... */ }
-    public void Charge(double amount) { /* ... */ }
-}
-
-card.ConnectToBank(); // caller has to know every step, in the right order
-card.Charge(100);
 ```
 
-In the above example, the caller of the good version just calls Pay and doesn't care how it works inside. The bad version pushes all the details onto the caller.
+In the above example, the bad version pushes all the details onto the caller. The caller of the good version just calls Pay and doesn't care how it works inside.
 
 **Abstract class vs Interface:**
 
@@ -152,7 +156,12 @@ classDiagram
 _Example:_
 
 ```csharp
-// -------- Inheritance (is-a) ---------
+// -------- Bad practice ---------
+class Traveller : Passport { } // a Traveller is NOT a Passport
+```
+
+```csharp
+// -------- Good practice: Inheritance (is-a) ---------
 class Traveller {
     public virtual double GetDiscount() {
         return 0;
@@ -164,8 +173,10 @@ class GoldTraveller : Traveller {
         return 0.2; // 20% off
     }
 }
+```
 
-// -------- Composition (has-a) ---------
+```csharp
+// -------- Good practice: Composition (has-a) ---------
 class Passport {
     private DateTime expiryDate;
     public bool IsExpired() {
@@ -179,12 +190,9 @@ class Traveller {
         return !passport.IsExpired();
     }
 }
-
-// -------- Bad practice ---------
-class Traveller : Passport { } // a Traveller is NOT a Passport
 ```
 
-In the above example, a GoldTraveller **is a** Traveller, so inheritance fits. A Traveller just **has a** Passport, so it keeps one inside instead of inheriting from it.
+In the above example, a Traveller is **not** a Passport, so inheriting from it is wrong. A GoldTraveller **is a** Traveller, so inheritance fits. A Traveller just **has a** Passport, so it keeps one inside instead.
 
 ## Polymorphism
 
@@ -223,12 +231,9 @@ List<Traveller> travellers = new List<Traveller> {
     new SilverTraveller(),
     new GoldTraveller()
 };
+```
 
-// -------- Good practice ---------
-foreach (Traveller t in travellers) {
-    Console.WriteLine(t.GetDiscount()); // 0, 0.1, 0.2
-}
-
+```csharp
 // -------- Bad practice ---------
 foreach (Traveller t in travellers) {
     if (t is GoldTraveller) Console.WriteLine(0.2);
@@ -237,7 +242,14 @@ foreach (Traveller t in travellers) {
 }
 ```
 
-In the above example, the good loop just calls GetDiscount and each object answers for itself. The bad loop checks types by hand, so adding a PlatinumTraveller means editing every if-chain (breaks O in SOLID).
+```csharp
+// -------- Good practice ---------
+foreach (Traveller t in travellers) {
+    Console.WriteLine(t.GetDiscount()); // 0, 0.1, 0.2
+}
+```
+
+In the above example, the bad loop checks types by hand, so adding a PlatinumTraveller means editing every if-chain (breaks O in SOLID). The good loop just calls GetDiscount and each object answers for itself.
 
 ## Anemic model
 
@@ -249,14 +261,6 @@ An anemic model is:
 _Example:_
 
 ```csharp
-// -------- Good practice (rich model) ---------
-class Traveller {
-    private int points;
-    public void AddPoints(int amount) {
-        if (amount > 0) points += amount;
-    }
-}
-
 // -------- Bad practice (anemic model) ---------
 class Traveller {
     public int Points { get; set; }
@@ -271,4 +275,14 @@ class TravellerService {
 traveller.Points = -1000; // skips the service, nothing stops this
 ```
 
-In the above example, the rich Traveller owns its data **and** the rules for it. The anemic Traveller is just data, so the rules sit in another class and anyone can skip them. This also breaks encapsulation.
+```csharp
+// -------- Good practice (rich model) ---------
+class Traveller {
+    private int points;
+    public void AddPoints(int amount) {
+        if (amount > 0) points += amount;
+    }
+}
+```
+
+In the above example, the anemic Traveller is just data, so the rules sit in another class and anyone can skip them. This also breaks encapsulation. The rich Traveller owns its data **and** the rules for it.

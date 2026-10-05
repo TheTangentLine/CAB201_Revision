@@ -24,6 +24,18 @@ S in SOLID states that:
 _Example:_
 
 ```csharp
+// -------- Bad practice ---------
+class Person {
+    public void Study() {
+        Console.WriteLine("I'm studying.");
+    }
+    public void Teach() {
+        Console.WriteLine("I'm teaching.");
+    }
+}
+```
+
+```csharp
 // -------- Good practice ---------
 class Student {
     public void Study() {
@@ -36,19 +48,9 @@ class Teacher {
         Console.WriteLine("I'm teaching.");
     }
 }
-
-// -------- Bad practice ---------
-class Person {
-    public void Study() {
-        Console.WriteLine("I'm studying.");
-    }
-    public void Teach() {
-        Console.WriteLine("I'm teaching.");
-    }
-}
 ```
 
-In the above example, "Student" only has 1 job (study), same for "Teacher" (teach). If we want to change the Study method later, only Student is affected. With the Person approach, one class does everything, so every change touches it.
+In the above example, Person does everything, so every change touches it. "Student" only has 1 job (study), same for "Teacher" (teach). If we want to change the Study method later, only Student is affected.
 
 ## O - Open-closed principle
 
@@ -70,15 +72,9 @@ class Athlete {
 }
 
 // Now, they want the Athlete to walk a bit faster
+```
 
-// -------- Good practice ---------
-class FastAthlete : Athlete {
-    public void WalkFaster() {
-        km_H = 15;
-        Console.WriteLine("Walking faster...");
-    }
-}
-
+```csharp
 // -------- Bad practice ---------
 class Athlete {
     protected int km_H;
@@ -89,7 +85,17 @@ class Athlete {
 }
 ```
 
-In the above example, the good practice **extends** Athlete with a new class, so the old Athlete is never touched and nothing using it can break. The bad practice directly modifies Walk, so everywhere that relied on 10 km/h now changes. And if one day people want it slower, we have to modify Walk again.
+```csharp
+// -------- Good practice ---------
+class FastAthlete : Athlete {
+    public void WalkFaster() {
+        km_H = 15;
+        Console.WriteLine("Walking faster...");
+    }
+}
+```
+
+In the above example, the bad practice directly modifies Walk, so everywhere that relied on 10 km/h now changes. And if one day people want it slower, we have to modify Walk again. The good practice **extends** Athlete with a new class, so the old Athlete is never touched and nothing using it can break.
 
 ## L - Liskov substitution principle
 
@@ -109,17 +115,9 @@ class Bird {
         Console.WriteLine("Flying...");
     }
 }
+```
 
-// -------- Good practice ---------
-class Duck : Bird {
-    public override void Fly() {
-        Console.WriteLine("Duck flying...");
-    }
-}
-
-Bird duck = new Duck();
-duck.Fly(); // "Duck flying..." -> works fine
-
+```csharp
 // -------- Bad practice ---------
 class Penguin : Bird {
     public override void Fly() {
@@ -131,7 +129,19 @@ Bird penguin = new Penguin();
 penguin.Fly(); // crash!
 ```
 
-In the above example, Duck can stand in for Bird with no surprises. Penguin can't, because it breaks Fly. Penguin is still a bird, but it shouldn't inherit Fly. A better design is to move Fly into a separate `FlyingBird` class that only flying birds inherit.
+```csharp
+// -------- Good practice ---------
+class Duck : Bird {
+    public override void Fly() {
+        Console.WriteLine("Duck flying...");
+    }
+}
+
+Bird duck = new Duck();
+duck.Fly(); // "Duck flying..." -> works fine
+```
+
+In the above example, Penguin can't stand in for Bird, because it breaks Fly. Duck can, with no surprises. Penguin is still a bird, but it shouldn't inherit Fly. A better design is to move Fly into a separate `FlyingBird` class that only flying birds inherit.
 
 ## I - Interface segregation principle
 
@@ -144,6 +154,21 @@ I in SOLID states that:
 > This one is very important in **enterprise**: codebases are huge and many teams share the same interfaces. With one big interface, adding a single method forces every class (and every team) to change.
 
 _Example:_
+
+```csharp
+// -------- Bad practice ---------
+interface ISuperMachine {
+    void Print();
+    void Scan();
+    void Fax();
+}
+
+class Printer : ISuperMachine {
+    public void Print() { Console.WriteLine("Printing..."); }
+    public void Scan()  { throw new NotImplementedException(); } // can't scan
+    public void Fax()   { throw new NotImplementedException(); } // can't fax
+}
+```
 
 ```csharp
 // -------- Good practice ---------
@@ -159,19 +184,6 @@ class SuperMachine : IPrinter, IScanner, IFax {
 
 class Printer : IPrinter {
     public void Print() { Console.WriteLine("Printing..."); }
-}
-
-// -------- Bad practice ---------
-interface ISuperMachine {
-    void Print();
-    void Scan();
-    void Fax();
-}
-
-class Printer : ISuperMachine {
-    public void Print() { Console.WriteLine("Printing..."); }
-    public void Scan()  { throw new NotImplementedException(); } // can't scan
-    public void Fax()   { throw new NotImplementedException(); } // can't fax
 }
 ```
 
@@ -206,7 +218,19 @@ class WhatsApp : IMessage {
         Console.WriteLine("WhatsApp: " + text);
     }
 }
+```
 
+```csharp
+// -------- Bad practice ---------
+class Notification {
+    private Email email = new Email();
+    public void Notify(string text) {
+        email.Send(text);
+    }
+}
+```
+
+```csharp
 // -------- Good practice ---------
 class Notification {
     private IMessage message;
@@ -220,14 +244,6 @@ class Notification {
 
 new Notification(new Email()).Notify("Hi!");    // send by Email
 new Notification(new WhatsApp()).Notify("Hi!"); // switch to WhatsApp, Notification unchanged
-
-// -------- Bad practice ---------
-class Notification {
-    private Email email = new Email();
-    public void Notify(string text) {
-        email.Send(text);
-    }
-}
 ```
 
-In the above example, the good Notification only knows about IMessage, so switching between Email and WhatsApp is a one-word change. The bad Notification is stuck with Email, so switching to WhatsApp means rewriting the class.
+In the above example, the bad Notification is stuck with Email, so switching to WhatsApp means rewriting the class. The good Notification only knows about IMessage, so switching between Email and WhatsApp is a one-word change.

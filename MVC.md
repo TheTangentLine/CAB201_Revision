@@ -99,15 +99,6 @@ In the above example, each part sticks to its job. The Model knows the rule (500
 _Example:_
 
 ```csharp
-// -------- Good practice (fat model, thin controller) ---------
-// Same as the example above: the rule lives inside Traveller.BookFlight()
-class TravellerController {
-    public void Book(string city) {
-        bool success = traveller.BookFlight(city);
-        view.ShowResult(city, success);
-    }
-}
-
 // -------- Bad practice (fat controller, thin model) ---------
 class Traveller {
     public int Points { get; set; } // just data, no behaviour
@@ -121,6 +112,17 @@ class TravellerController {
         }
         traveller.Points -= 500;                            // business rule
         Console.WriteLine("Booked flight to " + city + "!"); // view's job
+    }
+}
+```
+
+```csharp
+// -------- Good practice (fat model, thin controller) ---------
+// Same as the example above: the rule lives inside Traveller.BookFlight()
+class TravellerController {
+    public void Book(string city) {
+        bool success = traveller.BookFlight(city);
+        view.ShowResult(city, success);
     }
 }
 ```

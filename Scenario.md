@@ -151,7 +151,21 @@ class Flight {
     public bool HasSeats() { return seatsLeft > 0; }
     public void TakeSeat() { seatsLeft--; }
 }
+```
 
+```csharp
+// -------- Bad practice ---------
+class Traveller {
+    private IFlightRepository flights; // Model now depends on storage
+
+    public bool BookFlight(string code) {
+        Flight flight = flights.GetByCode(code);
+        // ...
+    }
+}
+```
+
+```csharp
 // -------- Good practice ---------
 class Traveller {
     public int Id { get; }
@@ -165,19 +179,9 @@ class Traveller {
         return BookingResult.Success;
     }
 }
-
-// -------- Bad practice ---------
-class Traveller {
-    private IFlightRepository flights; // Model now depends on storage
-
-    public bool BookFlight(string code) {
-        Flight flight = flights.GetByCode(code);
-        // ...
-    }
-}
 ```
 
-In the above example, the good Traveller still owns all the booking rules (fat model), but it doesn't know a DB exists. That also makes it easy to test: just pass in a `new Flight(...)`.
+In the above example, the bad Traveller depends on storage, the same problem as the tempting fix. The good Traveller still owns all the booking rules (fat model), but it doesn't know a DB exists. That also makes it easy to test: just pass in a `new Flight(...)`.
 
 ## Step 3: A Service does load → decide → save
 
