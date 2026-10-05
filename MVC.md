@@ -92,10 +92,9 @@ In the above example, each part sticks to its job. The Model knows the rule (500
 
 ## Fat model, thin controller
 
-The rule of thumb is:
-
-- **Fat model, thin controller**: business logic belongs in the **Model**, and the Controller stays small.
-- The opposite, **fat controller, thin model**, is the bad one. The Model ends up as just data, which is the **anemic model** from OOP.
+> [!IMPORTANT]
+> - **Fat model, thin controller**: business logic belongs in the **Model**, and the Controller stays small.
+> - The opposite, **fat controller, thin model**, is the bad one. The Model ends up as just data, which is the **anemic model** from OOP.
 
 _Example:_
 

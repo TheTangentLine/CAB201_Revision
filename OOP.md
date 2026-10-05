@@ -21,7 +21,8 @@ Encapsulation states that:
 - Keep the data **private**, and only let others touch it through **public** methods.
 - In other words, a class protects its own data so nobody outside can mess it up.
 
-It's mostly about `private` / `public` on the **fields and methods** inside a class, not on the class itself.
+> [!NOTE]
+> It's mostly about `private` / `public` on the **fields and methods** inside a class, not on the class itself.
 
 ```mermaid
 classDiagram
@@ -127,7 +128,8 @@ Inheritance states that:
 - A **child** class gets everything from its **parent** class, and can add or change things. This is an **"is-a"** relationship.
 - But reusing code doesn't always need inheritance. **Composition** means a class **has** another class inside it. This is a **"has-a"** relationship.
 
-Rule of thumb: **is-a → inheritance, has-a → composition**. When unsure, pick composition (see L in SOLID, the Penguin problem).
+> [!TIP]
+> Rule of thumb: **is-a → inheritance, has-a → composition**. When unsure, pick composition (see L in SOLID, the Penguin problem).
 
 ```mermaid
 classDiagram

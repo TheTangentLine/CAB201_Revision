@@ -24,6 +24,9 @@ The questions are:
 - **Who holds the DB?** Not the Model. A Traveller shouldn't know where it's stored (S in SOLID, and MVC keeps the Model clean).
 - **So how does the Model check the DB?** It doesn't. Someone else **loads** the data first, then **passes** it to the Model so the Model can decide.
 
+> [!IMPORTANT]
+> The Model never touches the DB: **load → let the Model decide → save**.
+
 ## Step 1: Repository, one small interface per type
 
 A **repository** is a class whose only job is to load and save one type of object.
@@ -191,7 +194,8 @@ TravellerController controller = new TravellerController(bookingService, new Tra
 controller.Book(1, "QF61");
 ```
 
-Switching to the relational DB means changing **only these 2 lines**. No Model, Service, Controller or View code changes.
+> [!TIP]
+> Switching to the relational DB means changing **only these 2 lines**. No Model, Service, Controller or View code changes.
 
 ## Checklist
 

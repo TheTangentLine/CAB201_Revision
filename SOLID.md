@@ -98,7 +98,8 @@ L in SOLID states that:
 - A child class must be able to **replace** its parent class without breaking anything.
 - In other words, if Duck is a Bird, then anywhere a Bird works, a Duck must work too.
 
-This is what makes **polymorphism** safe: we can write `Bird b = new Duck();` and call `b.Fly()` without caring which bird it actually is.
+> [!NOTE]
+> This is what makes **polymorphism** safe: we can write `Bird b = new Duck();` and call `b.Fly()` without caring which bird it actually is.
 
 _Example:_
 
@@ -139,7 +140,8 @@ I in SOLID states that:
 - A class should **not be forced** to implement methods it doesn't use.
 - In other words, many small interfaces are better than one big interface.
 
-This one is very important in **enterprise**: codebases are huge and many teams share the same interfaces. With one big interface, adding a single method forces every class (and every team) to change.
+> [!IMPORTANT]
+> This one is very important in **enterprise**: codebases are huge and many teams share the same interfaces. With one big interface, adding a single method forces every class (and every team) to change.
 
 _Example:_
 
@@ -177,7 +179,8 @@ In the above example, the bad Printer is stuck with Scan and Fax even though it 
 
 ## D - Dependency inversion principle
 
-Hardest to explain, easiest to implement.
+> [!NOTE]
+> Hardest to explain, easiest to implement.
 
 D in SOLID states that:
 

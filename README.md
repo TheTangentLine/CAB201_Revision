@@ -9,4 +9,5 @@ Short, example-first notes on writing clean object-oriented code in C#.
 3. [MVC](MVC.md) - splitting an app into Model, View and Controller. Fat model, thin controller.
 4. [Scenario](Scenario.md) - everything together: in-memory DB now, relational DB later, using repositories, a service and DI.
 
+> [!TIP]
 > The diagrams use mermaid. GitHub renders them out of the box. In VS Code, install the "Markdown Preview Mermaid Support" extension.
