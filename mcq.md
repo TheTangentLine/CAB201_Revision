@@ -1,9 +1,5 @@
 # MCQ Practice
 
-42 questions on constructors and inheritance, SOLID, cohesion, coupling and design case studies. Answers are in the [Answer key](#answer-key) at the end.
-
----
-
 ### Q1
 
 In the design below, `RobotWorker` cannot eat, so its `Eat()` throws `NotImplementedException`. Which SOLID principle does the design of the `IWorker` interface violate?
@@ -506,19 +502,19 @@ Given `class A { public A() { Show(); } public virtual void Show() { Console.Wri
 
 ## Answer key
 
-| Q | Answer | Q | Answer | Q | Answer |
-| - | - | - | - | - | - |
-| [Q1](#q1) | e | [Q15](#q15) | d | [Q29](#q29) | b |
-| [Q2](#q2) | e | [Q16](#q16) | e | [Q30](#q30) | a |
-| [Q3](#q3) | a | [Q17](#q17) | c | [Q31](#q31) | e |
-| [Q4](#q4) | d | [Q18](#q18) | a | [Q32](#q32) | c |
-| [Q5](#q5) | c | [Q19](#q19) | a | [Q33](#q33) | c |
-| [Q6](#q6) | d | [Q20](#q20) | a | [Q34](#q34) | b |
-| [Q7](#q7) | d | [Q21](#q21) | c | [Q35](#q35) | b |
-| [Q8](#q8) | c | [Q22](#q22) | c | [Q36](#q36) | d |
-| [Q9](#q9) | e | [Q23](#q23) | c | [Q37](#q37) | d |
-| [Q10](#q10) | d | [Q24](#q24) | d | [Q38](#q38) | e |
-| [Q11](#q11) | c | [Q25](#q25) | e | [Q39](#q39) | d |
-| [Q12](#q12) | b | [Q26](#q26) | b | [Q40](#q40) | a |
-| [Q13](#q13) | a | [Q27](#q27) | d | [Q41](#q41) | a |
-| [Q14](#q14) | a | [Q28](#q28) | c | [Q42](#q42) | b |
+| Q           | Answer | Q           | Answer | Q           | Answer |
+| ----------- | ------ | ----------- | ------ | ----------- | ------ |
+| [Q1](#q1)   | e      | [Q15](#q15) | d      | [Q29](#q29) | b      |
+| [Q2](#q2)   | e      | [Q16](#q16) | e      | [Q30](#q30) | a      |
+| [Q3](#q3)   | a      | [Q17](#q17) | c      | [Q31](#q31) | e      |
+| [Q4](#q4)   | d      | [Q18](#q18) | a      | [Q32](#q32) | c      |
+| [Q5](#q5)   | c      | [Q19](#q19) | a      | [Q33](#q33) | c      |
+| [Q6](#q6)   | d      | [Q20](#q20) | a      | [Q34](#q34) | b      |
+| [Q7](#q7)   | d      | [Q21](#q21) | c      | [Q35](#q35) | b      |
+| [Q8](#q8)   | c      | [Q22](#q22) | c      | [Q36](#q36) | d      |
+| [Q9](#q9)   | e      | [Q23](#q23) | c      | [Q37](#q37) | d      |
+| [Q10](#q10) | d      | [Q24](#q24) | d      | [Q38](#q38) | e      |
+| [Q11](#q11) | c      | [Q25](#q25) | e      | [Q39](#q39) | d      |
+| [Q12](#q12) | b      | [Q26](#q26) | b      | [Q40](#q40) | a      |
+| [Q13](#q13) | a      | [Q27](#q27) | d      | [Q41](#q41) | a      |
+| [Q14](#q14) | a      | [Q28](#q28) | c      | [Q42](#q42) | b      |
