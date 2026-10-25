@@ -24,7 +24,21 @@ classDiagram
 
 ### Q2
 
-Given `class Vehicle { public Vehicle(int wheels) { Console.Write(wheels); } } class Car : Vehicle { public Car() : base(4) { Console.Write("Car"); } }`, what does `new Car();` print?
+What does `new Car();` print?
+
+```csharp
+class Vehicle {
+    public Vehicle(int wheels) {
+        Console.Write(wheels);
+    }
+}
+
+class Car : Vehicle {
+    public Car() : base(4) {
+        Console.Write("Car");
+    }
+}
+```
 
 **a.** Car4\
 **b.** Car\
@@ -44,13 +58,29 @@ Methods in a class are grouped because they must be called in a certain order (e
 
 ### Q4
 
-Given `class Counter { static Counter() { Console.Write("S"); } public Counter() { Console.Write("I"); } }`, what does `new Counter(); new Counter();` print?
+What does the code below print?
 
-**a.** ISIS\
-**b.** SISI\
-**c.** II\
-**d.** SII\
-**e.** IIS
+```csharp
+void AddTen(int x) {
+    x += 10;
+}
+
+void AddTenRef(ref int x) {
+    x += 10;
+}
+
+int a = 5;
+int b = 5;
+AddTen(a);
+AddTenRef(ref b);
+Console.Write(a + " " + b);
+```
+
+**a.** `5 5`\
+**b.** `15 15`\
+**c.** `15 5`\
+**d.** `5 15`\
+**e.** Compile-time error.
 
 ### Q5
 
@@ -64,16 +94,6 @@ Which of the following is NOT one of the SOLID principles?
 
 ### Q6
 
-Given `class A { public virtual void Show() { Console.Write("A"); } } class B : A { public override void Show() { base.Show(); Console.Write("B"); } }`, what does `A obj = new B(); obj.Show();` print?
-
-**a.** A\
-**b.** B\
-**c.** BA\
-**d.** AB\
-**e.** Compile-time error.
-
-### Q7
-
 In a booking app, `BookingService` depends on `IFlightRepository`. Switching from `InMemoryFlightRepository` to `SqlFlightRepository` only requires changing one line in `Main`. Which SOLID principle mainly makes this possible?
 
 **a.** Single Responsibility Principle.\
@@ -82,7 +102,7 @@ In a booking app, `BookingService` depends on `IFlightRepository`. Switching fro
 **d.** Dependency Inversion Principle.\
 **e.** None of the above.
 
-### Q8
+### Q7
 
 A well-designed system should aim for:
 
@@ -91,6 +111,38 @@ A well-designed system should aim for:
 **c.** High cohesion and low coupling.\
 **d.** High cohesion and high coupling.\
 **e.** Cohesion and coupling do not matter.
+
+### Q8
+
+What does the code below do?
+
+```csharp
+class Traveller {
+    public virtual double GetDiscount() {
+        return 0;
+    }
+}
+
+class GoldTraveller : Traveller {
+    public override double GetDiscount() {
+        return 0.2;
+    }
+}
+
+List<Traveller> travellers = new List<Traveller>();
+travellers.Add(new Traveller());
+travellers.Add(new GoldTraveller());
+
+foreach (Traveller t in travellers) {
+    Console.Write(t.GetDiscount() + " ");
+}
+```
+
+**a.** Compile-time error, because a `List<Traveller>` cannot store a `GoldTraveller`.\
+**b.** Prints `0 0`, because the list only knows about `Traveller`.\
+**c.** Prints `0 0.2`.\
+**d.** Throws `InvalidCastException` at run time.\
+**e.** Prints `0.2 0.2`.
 
 ### Q9
 
@@ -114,6 +166,16 @@ The interface `ISuperMachine` declares `Print()`, `Scan()` and `Fax()`. A team a
 
 ### Q11
 
+In C#, which statement about `ref` and `out` parameters is correct?
+
+**a.** `ref` and `out` behave exactly the same.\
+**b.** A `ref` variable must be assigned before it is passed in; an `out` parameter must be assigned inside the method before it returns.\
+**c.** An `out` variable must be assigned before it is passed in; a `ref` parameter must be assigned inside the method.\
+**d.** Both only work with reference types such as classes.\
+**e.** Both pass a copy of the value, so the caller never sees changes.
+
+### Q12
+
 `Print(report, true)` prints a PDF and `Print(report, false)` prints plain text. The caller passes a flag that decides what the method does. Which type of coupling is this?
 
 **a.** Data coupling\
@@ -122,7 +184,7 @@ The interface `ISuperMachine` declares `Print()`, `Scan()` and `Fax()`. A team a
 **d.** Content coupling\
 **e.** Common coupling
 
-### Q12
+### Q13
 
 `Penguin` inherits from `Bird`, and `Penguin.Fly()` throws an exception. Which redesign best fixes the problem?
 
@@ -132,9 +194,26 @@ The interface `ISuperMachine` declares `Print()`, `Scan()` and `Fax()`. A team a
 **d.** Make `Bird` a sealed class.\
 **e.** Check `if (bird is Penguin)` before every call to `Fly()`.
 
-### Q13
+### Q14
 
-Given `class A { public void Show() { Console.Write("A"); } } class B : A { public new void Show() { Console.Write("B"); } }`, what does `A obj = new B(); obj.Show();` print?
+What does the code below print?
+
+```csharp
+class A {
+    public void Show() {
+        Console.Write("A");
+    }
+}
+
+class B : A {
+    public new void Show() {
+        Console.Write("B");
+    }
+}
+
+A obj = new B();
+obj.Show();
+```
 
 **a.** A\
 **b.** B\
@@ -142,7 +221,7 @@ Given `class A { public void Show() { Console.Write("A"); } } class B : A { publ
 **d.** BA\
 **e.** Compile-time error.
 
-### Q14
+### Q15
 
 `Notification` depends on the `IMessage` interface instead of the `Email` class. What effect does this have?
 
@@ -152,7 +231,7 @@ Given `class A { public void Show() { Console.Write("A"); } } class B : A { publ
 **d.** It makes Notification an anemic model.\
 **e.** It has no effect.
 
-### Q15
+### Q16
 
 `BankAccount.Withdraw(amount)` accepts any positive amount. A child class `StudentAccount` overrides it and throws an exception when `amount > 100`. Code that works with `BankAccount` now breaks when given a `StudentAccount`. Which SOLID principle is violated?
 
@@ -162,7 +241,7 @@ Given `class A { public void Show() { Console.Write("A"); } } class B : A { publ
 **d.** Liskov Substitution Principle.\
 **e.** Open-Closed Principle.
 
-### Q16
+### Q17
 
 Which type of coupling is the loosest (most desirable)?
 
@@ -172,7 +251,23 @@ Which type of coupling is the loosest (most desirable)?
 **d.** Stamp coupling\
 **e.** Data coupling
 
-### Q17
+### Q18
+
+What happens when the code below is compiled?
+
+```csharp
+void GetAge(out int age) {
+    Console.Write("Hello");
+}
+```
+
+**a.** It compiles, and `age` is 0 after the call.\
+**b.** It compiles, and `age` keeps the value it had before the call.\
+**c.** It compiles, but throws an exception at run time.\
+**d.** It compiles only if the caller initialises `age` first.\
+**e.** Compile-time error, because an `out` parameter must be assigned before the method returns.
+
+### Q19
 
 In the design below, setting `Width` on a `Square` also changes its `Height`. A method that takes a `Rectangle`, sets `Width = 5` and `Height = 4`, then expects `Area() == 20`, fails when given a `Square`. Which SOLID principle is violated?
 
@@ -193,7 +288,7 @@ classDiagram
 **d.** Interface Segregation Principle.\
 **e.** Dependency Inversion Principle.
 
-### Q18
+### Q20
 
 A `TaxCalculator` class where every field and method contributes to one task, calculating income tax, is an example of:
 
@@ -203,7 +298,7 @@ A `TaxCalculator` class where every field and method contributes to one task, ca
 **d.** Logical cohesion\
 **e.** Temporal cohesion
 
-### Q19
+### Q21
 
 `SendWelcomeEmail(Traveller traveller)` only uses `traveller.Email`, but receives the whole `Traveller` object. Which type of coupling is this?
 
@@ -213,7 +308,7 @@ A `TaxCalculator` class where every field and method contributes to one task, ca
 **d.** Common coupling\
 **e.** Content coupling
 
-### Q20
+### Q22
 
 A `Utils` class contains `FormatDate()`, `CalculateTax()` and `SendEmail()`, which have nothing in common. This is an example of:
 
@@ -223,9 +318,30 @@ A `Utils` class contains `FormatDate()`, `CalculateTax()` and `SendEmail()`, whi
 **d.** Functional cohesion\
 **e.** Sequential cohesion
 
-### Q21
+### Q23
 
-Given `class OrderService { private SqlDatabase db = new SqlDatabase(); }`, how should it be changed to follow the Dependency Inversion Principle?
+`GoldTraveller` inherits from `Traveller`. What happens with the code below?
+
+```csharp
+List<GoldTraveller> golds = new List<GoldTraveller>();
+List<Traveller> travellers = golds;
+```
+
+**a.** It compiles, because a `GoldTraveller` is a `Traveller`.\
+**b.** It compiles, but throws `InvalidCastException` at run time.\
+**c.** It compiles, and `travellers` becomes a copy of `golds`.\
+**d.** Compile-time error: a `List<GoldTraveller>` is not a `List<Traveller>`, even though a `GoldTraveller` is a `Traveller`.\
+**e.** None of the above.
+
+### Q24
+
+How should the class below be changed to follow the Dependency Inversion Principle?
+
+```csharp
+class OrderService {
+    private SqlDatabase db = new SqlDatabase();
+}
+```
 
 **a.** Make `SqlDatabase` a static class.\
 **b.** Make `OrderService` inherit from `SqlDatabase`.\
@@ -233,7 +349,7 @@ Given `class OrderService { private SqlDatabase db = new SqlDatabase(); }`, how 
 **d.** Copy the database code into `OrderService`.\
 **e.** Make the `db` field public.
 
-### Q22
+### Q25
 
 A `CustomerReport` class has methods that print a customer's details, update the customer's address and calculate the customer's balance. All the methods work on the same customer record. This is an example of:
 
@@ -243,7 +359,17 @@ A `CustomerReport` class has methods that print a customer's details, update the
 **d.** Coincidental cohesion\
 **e.** Procedural cohesion
 
-### Q23
+### Q26
+
+In C#, when is the method to call decided for overloading and for overriding?
+
+**a.** Overloading is decided at compile time; overriding is decided at run time.\
+**b.** Both are decided at compile time.\
+**c.** Both are decided at run time.\
+**d.** Overloading is decided at run time; overriding is decided at compile time.\
+**e.** Neither is decided until the method is called twice.
+
+### Q27
 
 `TravellerController.Book()` checks the traveller's points, subtracts the cost, and prints "Booked!" with `Console.WriteLine`, while `Traveller` only has `{ get; set; }` properties. Which statement is the most accurate?
 
@@ -253,7 +379,7 @@ A `CustomerReport` class has methods that print a customer's details, update the
 **d.** This follows MVC because all the code is in one place.\
 **e.** None of the above.
 
-### Q24
+### Q28
 
 Which list orders cohesion from WORST to BEST?
 
@@ -263,7 +389,7 @@ Which list orders cohesion from WORST to BEST?
 **d.** Coincidental, Logical, Temporal, Procedural, Communicational, Sequential, Functional.\
 **e.** Temporal, Coincidental, Logical, Procedural, Functional, Sequential, Communicational.
 
-### Q25
+### Q29
 
 A `DiscountCalculator` has a `switch` on the customer type that must be edited every time a new customer type is added. What is the best way to fix it?
 
@@ -273,7 +399,7 @@ A `DiscountCalculator` has a `switch` on the customer type that must be edited e
 **d.** Make the customer type a public field so any class can change it.\
 **e.** Give each customer type its own class that overrides a virtual `GetDiscount()` method.
 
-### Q26
+### Q30
 
 `InputHandler.Handle(int source)` reads from the keyboard, a file or the network depending on the `source` flag. The parts are grouped because they are the same kind of thing (input), not because they work together. This is an example of:
 
@@ -283,7 +409,7 @@ A `DiscountCalculator` has a `switch` on the customer type that must be edited e
 **d.** Sequential cohesion\
 **e.** Functional cohesion
 
-### Q27
+### Q31
 
 Class `A` changes a private field of class `B` directly using reflection. Which type of coupling is this?
 
@@ -293,7 +419,7 @@ Class `A` changes a private field of class `B` directly using reflection. Which 
 **d.** Content coupling\
 **e.** Common coupling
 
-### Q28
+### Q32
 
 A `Startup` class contains `InitLogger()`, `LoadConfig()` and `OpenDatabase()`. They are grouped only because they all run when the program starts. This is an example of:
 
@@ -303,7 +429,17 @@ A `Startup` class contains `InitLogger()`, `LoadConfig()` and `OpenDatabase()`. 
 **d.** Communicational cohesion\
 **e.** Functional cohesion
 
-### Q29
+### Q33
+
+Which pair of methods is a valid overload in the same class?
+
+**a.** `int Add(int a, int b)` and `double Add(int a, int b)`\
+**b.** `void Print(int x)` and `void Print(int y)`\
+**c.** `void Print(int x)` and `void Print(string x)`\
+**d.** `void Print(int x)` and `void PrintInt(int x)`\
+**e.** None of the above.
+
+### Q34
 
 A `DiscountCalculator` has a `switch` on the customer type ("Regular", "Silver", "Gold"). Every time a new customer type is added, a developer must edit this `switch`. Which SOLID principle is violated?
 
@@ -313,17 +449,7 @@ A `DiscountCalculator` has a `switch` on the customer type ("Regular", "Silver",
 **d.** Interface Segregation Principle.\
 **e.** Dependency Inversion Principle.
 
-### Q30
-
-Given `class Box { public Box() : this(5) { Console.Write("A"); } public Box(int size) { Console.Write(size); } }`, what does `new Box();` print?
-
-**a.** 5A\
-**b.** A5\
-**c.** A\
-**d.** 5\
-**e.** Throws StackOverflowException.
-
-### Q31
+### Q35
 
 In the design below, `OrderService` creates its own `SqlDatabase` with `new SqlDatabase()`. Which SOLID principle does this violate most directly?
 
@@ -345,7 +471,7 @@ classDiagram
 **d.** Single Responsibility Principle.\
 **e.** Dependency Inversion Principle.
 
-### Q32
+### Q36
 
 Each constructor below writes its own class name with `Console.Write`. What does `new C();` print?
 
@@ -370,7 +496,7 @@ classDiagram
 **d.** AC\
 **e.** Compile-time error.
 
-### Q33
+### Q37
 
 Which statement best describes "one reason to change" in the Single Responsibility Principle?
 
@@ -380,7 +506,44 @@ Which statement best describes "one reason to change" in the Single Responsibili
 **d.** A class should be changed at most once.\
 **e.** A class should never be changed after release.
 
-### Q34
+### Q38
+
+`GoldTraveller` inherits from `Traveller`, and `golds` is a `List<GoldTraveller>`. Which line compiles?
+
+**a.** `List<Traveller> a = golds;`\
+**b.** `IEnumerable<Traveller> b = golds;`\
+**c.** `List<object> c = golds;`\
+**d.** `GoldTraveller d = golds;`\
+**e.** None of the above.
+
+### Q39
+
+What does the code below print?
+
+```csharp
+class Animal { }
+class Dog : Animal { }
+
+void Speak(Animal a) {
+    Console.Write("Animal ");
+}
+
+void Speak(Dog d) {
+    Console.Write("Dog ");
+}
+
+Animal pet = new Dog();
+Speak(pet);
+Speak(new Dog());
+```
+
+**a.** `Dog Dog`\
+**b.** `Animal Dog`\
+**c.** `Animal Animal`\
+**d.** `Dog Animal`\
+**e.** Compile-time error, because the call is ambiguous.
+
+### Q40
 
 In the design below, several classes read and write `InMemoryDB.Travellers`, a `public static` list. Which type of coupling is this?
 
@@ -400,17 +563,7 @@ classDiagram
 **d.** Control coupling\
 **e.** Content coupling
 
-### Q35
-
-What is printed by `class Animal { public Animal() { Console.Write("Animal "); } } class Dog : Animal { public Dog() { Console.Write("Dog "); } }` when running `new Dog();`?
-
-**a.** Dog Animal\
-**b.** Animal Dog\
-**c.** Dog\
-**d.** Animal\
-**e.** Compile-time error.
-
-### Q36
+### Q41
 
 Which is a typical consequence of tight coupling?
 
@@ -420,9 +573,19 @@ Which is a typical consequence of tight coupling?
 **d.** A change in one class forces changes in other classes, and testing in isolation becomes hard.\
 **e.** The program always runs faster.
 
-### Q37
+### Q42
 
-Given `class Person { public Person(string name) { } } class Student : Person { public Student() { } }`, what happens when the code is compiled?
+What happens when the code below is compiled?
+
+```csharp
+class Person {
+    public Person(string name) { }
+}
+
+class Student : Person {
+    public Student() { }
+}
+```
 
 **a.** It compiles, and Person's constructor is skipped.\
 **b.** It compiles, and name is set to null.\
@@ -430,7 +593,7 @@ Given `class Person { public Person(string name) { } } class Student : Person { 
 **d.** Compile-time error, because Person has no parameterless constructor and Student does not call base(...).\
 **e.** None of the above.
 
-### Q38
+### Q43
 
 A developer designs the classes below so that `Traveller` can reuse `IsExpired()`. What is the better design?
 
@@ -449,7 +612,7 @@ classDiagram
 **d.** Make `Passport` an interface with all of Traveller's methods.\
 **e.** Use composition: `Traveller` has a private `Passport` field and calls `passport.IsExpired()`.
 
-### Q39
+### Q44
 
 A class has `ReadFile()`, `ParseLines()` and `SaveRecords()`, where the output of each method is the input of the next, like an assembly line. This is an example of:
 
@@ -459,7 +622,17 @@ A class has `ReadFile()`, `ParseLines()` and `SaveRecords()`, where the output o
 **d.** Sequential cohesion\
 **e.** Coincidental cohesion
 
-### Q40
+### Q45
+
+To override a method in C#, which keywords are needed in the parent and in the child?
+
+**a.** Parent: nothing. Child: `override`.\
+**b.** Parent: `override`. Child: `virtual`.\
+**c.** Parent: `new`. Child: `override`.\
+**d.** Parent: `virtual` (or `abstract`). Child: `override`.\
+**e.** Parent: `static`. Child: `override`.
+
+### Q46
 
 A `ReportGenerator` class loads sales data from the database, formats it as HTML, and emails it to the manager. Which description fits best?
 
@@ -469,7 +642,7 @@ A `ReportGenerator` class loads sales data from the database, formats it as HTML
 **d.** Functional cohesion, and it follows OCP.\
 **e.** None of the above.
 
-### Q41
+### Q47
 
 Which SOLID principle does the `Invoice` class below violate?
 
@@ -488,9 +661,31 @@ classDiagram
 **d.** Interface Segregation Principle.\
 **e.** Dependency Inversion Principle.
 
-### Q42
+### Q48
 
-Given `class A { public A() { Show(); } public virtual void Show() { Console.Write("A"); } } class B : A { private string name = "B"; public B() { name = "C"; } public override void Show() { Console.Write(name); } }`, what does `new B();` print?
+What does `new B();` print?
+
+```csharp
+class A {
+    public A() {
+        Show();
+    }
+    public virtual void Show() {
+        Console.Write("A");
+    }
+}
+
+class B : A {
+    private string name = "B";
+
+    public B() {
+        name = "C";
+    }
+    public override void Show() {
+        Console.Write(name);
+    }
+}
+```
 
 **a.** A\
 **b.** B\
@@ -502,19 +697,21 @@ Given `class A { public A() { Show(); } public virtual void Show() { Console.Wri
 
 ## Answer key
 
-| Q           | Answer | Q           | Answer | Q           | Answer |
-| ----------- | ------ | ----------- | ------ | ----------- | ------ |
-| [Q1](#q1)   | e      | [Q15](#q15) | d      | [Q29](#q29) | b      |
-| [Q2](#q2)   | e      | [Q16](#q16) | e      | [Q30](#q30) | a      |
-| [Q3](#q3)   | a      | [Q17](#q17) | c      | [Q31](#q31) | e      |
-| [Q4](#q4)   | d      | [Q18](#q18) | a      | [Q32](#q32) | c      |
-| [Q5](#q5)   | c      | [Q19](#q19) | a      | [Q33](#q33) | c      |
-| [Q6](#q6)   | d      | [Q20](#q20) | a      | [Q34](#q34) | b      |
-| [Q7](#q7)   | d      | [Q21](#q21) | c      | [Q35](#q35) | b      |
-| [Q8](#q8)   | c      | [Q22](#q22) | c      | [Q36](#q36) | d      |
-| [Q9](#q9)   | e      | [Q23](#q23) | c      | [Q37](#q37) | d      |
-| [Q10](#q10) | d      | [Q24](#q24) | d      | [Q38](#q38) | e      |
-| [Q11](#q11) | c      | [Q25](#q25) | e      | [Q39](#q39) | d      |
-| [Q12](#q12) | b      | [Q26](#q26) | b      | [Q40](#q40) | a      |
-| [Q13](#q13) | a      | [Q27](#q27) | d      | [Q41](#q41) | a      |
-| [Q14](#q14) | a      | [Q28](#q28) | c      | [Q42](#q42) | b      |
+| Q | Answer | Q | Answer | Q | Answer |
+| - | - | - | - | - | - |
+| [Q1](#q1) | e | [Q17](#q17) | e | [Q33](#q33) | c |
+| [Q2](#q2) | e | [Q18](#q18) | e | [Q34](#q34) | b |
+| [Q3](#q3) | a | [Q19](#q19) | c | [Q35](#q35) | e |
+| [Q4](#q4) | d | [Q20](#q20) | a | [Q36](#q36) | c |
+| [Q5](#q5) | c | [Q21](#q21) | a | [Q37](#q37) | c |
+| [Q6](#q6) | d | [Q22](#q22) | a | [Q38](#q38) | b |
+| [Q7](#q7) | c | [Q23](#q23) | d | [Q39](#q39) | b |
+| [Q8](#q8) | c | [Q24](#q24) | c | [Q40](#q40) | b |
+| [Q9](#q9) | e | [Q25](#q25) | c | [Q41](#q41) | d |
+| [Q10](#q10) | d | [Q26](#q26) | a | [Q42](#q42) | d |
+| [Q11](#q11) | b | [Q27](#q27) | c | [Q43](#q43) | e |
+| [Q12](#q12) | c | [Q28](#q28) | d | [Q44](#q44) | d |
+| [Q13](#q13) | b | [Q29](#q29) | e | [Q45](#q45) | d |
+| [Q14](#q14) | a | [Q30](#q30) | b | [Q46](#q46) | a |
+| [Q15](#q15) | a | [Q31](#q31) | d | [Q47](#q47) | a |
+| [Q16](#q16) | d | [Q32](#q32) | c | [Q48](#q48) | b |

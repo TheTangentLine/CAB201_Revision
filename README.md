@@ -8,7 +8,7 @@ Short, example-first notes on writing clean object-oriented code in C#.
 2. [SOLID](SOLID.md) - 5 principles for code that's easy to change.
 3. [MVC](MVC.md) - splitting an app into Model, View and Controller. Fat model, thin controller.
 4. [Scenario](Scenario.md) - everything together: in-memory DB now, relational DB later, using repositories, a service and DI.
-5. [MCQ](mcq.md) - 42 practice questions: constructors and inheritance, SOLID, cohesion, coupling and case studies.
+5. [MCQ](mcq.md) - 48 practice questions: constructors and inheritance, ref vs out, overloading vs overriding, SOLID, cohesion, coupling and case studies.
 
 > [!TIP]
 > The diagrams use mermaid. GitHub renders them out of the box. In VS Code, install the "Markdown Preview Mermaid Support" extension.
