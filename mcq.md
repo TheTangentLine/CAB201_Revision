@@ -118,14 +118,14 @@ What does the code below do?
 
 ```csharp
 class Traveller {
-    public virtual double GetDiscount() {
-        return 0;
+    public virtual string GetTier() {
+        return "Standard";
     }
 }
 
 class GoldTraveller : Traveller {
-    public override double GetDiscount() {
-        return 0.2;
+    public override string GetTier() {
+        return "Gold";
     }
 }
 
@@ -134,15 +134,15 @@ travellers.Add(new Traveller());
 travellers.Add(new GoldTraveller());
 
 foreach (Traveller t in travellers) {
-    Console.Write(t.GetDiscount() + " ");
+    Console.WriteLine(t.GetTier());
 }
 ```
 
 **a.** Compile-time error, because a `List<Traveller>` cannot store a `GoldTraveller`.\
-**b.** Prints `0 0`, because the list only knows about `Traveller`.\
-**c.** Prints `0 0.2`.\
+**b.** Prints `Standard`, then `Standard`, because the list only knows about `Traveller`.\
+**c.** Prints `Standard`, then `Gold`.\
 **d.** Throws `InvalidCastException` at run time.\
-**e.** Prints `0.2 0.2`.
+**e.** Prints `Gold`, then `Gold`.
 
 ### Q9
 
@@ -764,9 +764,9 @@ SOLID is Single responsibility, Open-closed, Liskov substitution, Interface segr
 
 High cohesion means each class does one focused job. Low coupling means classes don't depend much on each other's details. Together they make code easy to change and test.
 
-**[Q8](#q8) — c.** Prints `0 0.2`
+**[Q8](#q8) — c.** Prints `Standard`, then `Gold`
 
-A `List<Traveller>` can hold a `GoldTraveller`, because a `GoldTraveller` **is a** `Traveller`. `GetDiscount()` is `virtual`/`override`, so each object runs its own version: `0` for `Traveller`, `0.2` for `GoldTraveller`. This is polymorphism.
+A `List<Traveller>` can hold a `GoldTraveller`, because a `GoldTraveller` **is a** `Traveller`. `GetTier()` is `virtual`/`override`, so each object runs its own version: `Standard` for `Traveller`, `Gold` for `GoldTraveller`. This is polymorphism.
 
 **[Q9](#q9) — e.** How closely related the responsibilities inside a single class or module are
 
