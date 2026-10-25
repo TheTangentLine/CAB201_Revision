@@ -715,3 +715,199 @@ class B : A {
 | [Q14](#q14) | a | [Q30](#q30) | b | [Q46](#q46) | a |
 | [Q15](#q15) | a | [Q31](#q31) | d | [Q47](#q47) | a |
 | [Q16](#q16) | d | [Q32](#q32) | c | [Q48](#q48) | b |
+
+---
+
+## Solutions
+
+**[Q1](#q1) — e.** Interface Segregation Principle
+
+`IWorker` is a fat interface: it forces `RobotWorker` to have an `Eat()` it can't do. The fix is to split it into small interfaces like `IWorkable` and `IEatable`, so each class only picks what it can do. (The throwing `Eat()` also smells like LSP, but the question asks what's wrong with the *interface*.)
+
+**[Q2](#q2) — e.** 4Car
+
+The parent constructor always runs first. `base(4)` passes 4 to `Vehicle`, which prints `4`, then the `Car` body prints `Car`.
+
+**[Q3](#q3) — a.** Procedural cohesion
+
+The methods are grouped because they run in a fixed order, but they don't pass data to each other. If the output of one were the input of the next, it would be sequential cohesion instead.
+
+**[Q4](#q4) — d.** `5 15`
+
+`AddTen(a)` gets a **copy** of `a`, so the change is lost and `a` stays 5. `AddTenRef(ref b)` gets the variable itself, so `b` really becomes 15.
+
+**[Q5](#q5) — c.** Don't Repeat Yourself
+
+SOLID is Single responsibility, Open-closed, Liskov substitution, Interface segregation and Dependency inversion. DRY (Don't Repeat Yourself) is a good rule, but it's not part of SOLID.
+
+**[Q6](#q6) — d.** Dependency Inversion Principle
+
+`BookingService` depends on the `IFlightRepository` interface, not on a concrete class. The real repository is plugged in from outside (in `Main`), so swapping it doesn't touch the service. That's dependency inversion.
+
+**[Q7](#q7) — c.** High cohesion and low coupling
+
+High cohesion means each class does one focused job. Low coupling means classes don't depend much on each other's details. Together they make code easy to change and test.
+
+**[Q8](#q8) — c.** Prints `0 0.2`
+
+A `List<Traveller>` can hold a `GoldTraveller`, because a `GoldTraveller` **is a** `Traveller`. `GetDiscount()` is `virtual`/`override`, so each object runs its own version: `0` for `Traveller`, `0.2` for `GoldTraveller`. This is polymorphism.
+
+**[Q9](#q9) — e.** How closely related the responsibilities inside a single class or module are
+
+Cohesion is about what's **inside** one class: do its parts belong together? Coupling is about how much **different** classes depend on each other.
+
+**[Q10](#q10) — d.** Every class implementing `ISuperMachine`, even simple printers, must now change
+
+Every class that implements an interface must implement all of its methods. Adding `Staple()` forces every implementer to change, even a simple printer that can't staple. This is why ISP matters in big codebases.
+
+**[Q11](#q11) — b.** A `ref` variable must be assigned before it is passed in; an `out` parameter must be assigned inside the method before it returns
+
+`ref` passes a variable that already has a value (the method can read and change it). `out` is for returning a value: the caller doesn't need to set it first, but the method **must** assign it before it returns.
+
+**[Q12](#q12) — c.** Control coupling
+
+The flag (`true`/`false`) controls which path runs inside `Print`. When one module tells another *how* to behave, that's control coupling. Two clearer methods, `PrintPdf()` and `PrintText()`, would remove it.
+
+**[Q13](#q13) — b.** Move `Fly()` into a separate `FlyingBird` class (or `IFlyable` interface) that only flying birds use
+
+A `Penguin` can't stand in for a `Bird` if every `Bird` can fly, which breaks LSP. Moving `Fly()` into `FlyingBird` (or an `IFlyable` interface) means only birds that can fly promise to fly. Doing nothing silently (c) still breaks what callers expect.
+
+**[Q14](#q14) — a.** A
+
+`new` **hides** the parent method instead of overriding it. With hiding, the **variable's type** decides which method runs. `obj` is declared as `A`, so `A.Show()` runs. With `virtual`/`override` it would print `B`.
+
+**[Q15](#q15) — a.** It reduces coupling, so Notification works with any IMessage (Email, WhatsApp) without changes
+
+`Notification` only knows the `IMessage` interface, so it isn't tied to `Email`. Any class that implements `IMessage` can be passed in, which is loose coupling (and DIP).
+
+**[Q16](#q16) — d.** Liskov Substitution Principle
+
+A child must work anywhere the parent works. `StudentAccount` adds a stricter rule (max 100) that callers of `BankAccount` don't expect, so swapping it in breaks their code. That breaks LSP.
+
+**[Q17](#q17) — e.** Data coupling
+
+Data coupling means modules only share the simple data they need, such as `int` or `string` parameters. From worst to best: content, common, control, stamp, data.
+
+**[Q18](#q18) — e.** Compile-time error, because an `out` parameter must be assigned before the method returns
+
+An `out` parameter **must** be assigned on every path before the method returns. `GetAge` never sets `age`, so the compiler rejects it.
+
+**[Q19](#q19) — c.** Liskov Substitution Principle
+
+Code written for a `Rectangle` expects `Width` and `Height` to change separately. A `Square` breaks that expectation, so it can't safely replace a `Rectangle`. That's an LSP violation, even though "a square is a rectangle" in maths.
+
+**[Q20](#q20) — a.** Functional cohesion
+
+Every part of `TaxCalculator` works towards one single, well-defined task. That's functional cohesion, the best kind.
+
+**[Q21](#q21) — a.** Stamp coupling
+
+Passing a whole object when only one field is needed is stamp coupling. `SendWelcomeEmail` now depends on the whole `Traveller` class. Passing just the email string would be data coupling.
+
+**[Q22](#q22) — a.** Coincidental cohesion
+
+The methods are in one class by chance, with no real relationship. That's coincidental cohesion, the worst kind. A `Utils` dumping ground is the classic example.
+
+**[Q23](#q23) — d.** Compile-time error: a `List<GoldTraveller>` is not a `List<Traveller>`, even though a `GoldTraveller` is a `Traveller`
+
+A `GoldTraveller` is a `Traveller`, but a `List<GoldTraveller>` is **not** a `List<Traveller>`. If it were, you could do `travellers.Add(new Traveller())` and put a plain `Traveller` into a list that should only hold Gold ones. So the compiler refuses.
+
+**[Q24](#q24) — c.** Depend on an `IDatabase` interface and receive it through the constructor
+
+Depend on an interface and let the caller pass the real database in through the constructor (dependency injection). Then `OrderService` works with any `IDatabase`, such as SQL now or in-memory for tests.
+
+**[Q25](#q25) — c.** Communicational cohesion
+
+All the methods work on the **same data**, the customer record. That's communicational cohesion.
+
+**[Q26](#q26) — a.** Overloading is decided at compile time; overriding is decided at run time
+
+Overloads are picked by the **compiler**, using the declared types of the arguments. Overrides are picked at **run time**, using the actual object (dynamic dispatch).
+
+**[Q27](#q27) — c.** This is a fat controller with an anemic model: the controller does the Model's job and the View's job
+
+The controller holds the business rule (points, cost) **and** prints output, so it's doing the Model's and the View's jobs. Meanwhile `Traveller` is just data. MVC says: fat model, thin controller.
+
+**[Q28](#q28) — d.** Coincidental, Logical, Temporal, Procedural, Communicational, Sequential, Functional
+
+From worst to best: coincidental, logical, temporal, procedural, communicational, sequential, functional.
+
+**[Q29](#q29) — e.** Give each customer type its own class that overrides a virtual `GetDiscount()` method
+
+Give each customer type its own class with its own `GetDiscount()`. Adding a new type means adding a new class, without editing tested code. That's OCP done with polymorphism.
+
+**[Q30](#q30) — b.** Logical cohesion
+
+The parts are grouped because they're the same *kind* of thing (input), and a flag picks which one runs. That's logical cohesion.
+
+**[Q31](#q31) — d.** Content coupling
+
+One class reaching into another's private internals is content coupling, the tightest (worst) kind. Any change inside `B` can break `A`.
+
+**[Q32](#q32) — c.** Temporal cohesion
+
+The methods are grouped only because they run at the same **time** (start-up). That's temporal cohesion.
+
+**[Q33](#q33) — c.** `void Print(int x)` and `void Print(string x)`
+
+Overloads must have the **same name** but a **different parameter list** (different types, number or order). A different return type alone (a) or only a different parameter name (b) isn't enough, and (d) just uses a different name.
+
+**[Q34](#q34) — b.** Open-Closed Principle
+
+Every new customer type means editing the existing `switch`. Code should be open for extension (add a new class) but closed for modification (don't edit what already works).
+
+**[Q35](#q35) — e.** Dependency Inversion Principle
+
+`OrderService` (high-level) creates and depends on the concrete `SqlDatabase` (low-level). DIP says both should depend on an abstraction such as `IDatabase`.
+
+**[Q36](#q36) — c.** ABC
+
+Constructors run from the top of the hierarchy down: `A` first, then `B`, then `C`, so it prints `ABC`.
+
+**[Q37](#q37) — c.** A class should have only one job, so only changes to that job affect it
+
+"One reason to change" means one job. If a class has several jobs, changes to any of them force edits to the same class.
+
+**[Q38](#q38) — b.** `IEnumerable<Traveller> b = golds;`
+
+`IEnumerable<T>` is covariant (`out T`): you can only read from it, never add, so treating a list of Gold travellers as a sequence of `Traveller` is safe. `List<T>` allows adding, so (a) and (c) don't compile, and (d) assigns a list to a single object.
+
+**[Q39](#q39) — b.** `Animal Dog`
+
+Overloads are chosen at **compile time** from the **declared** type. `pet` is declared as `Animal`, so `Speak(Animal)` runs and prints `Animal`, even though the object is a `Dog`. `new Dog()` has type `Dog`, so it prints `Dog`.
+
+**[Q40](#q40) — b.** Common coupling
+
+Several classes share a global (static) variable, so a change made in one place affects all of them. That's common coupling. Passing a repository in through an interface would fix it.
+
+**[Q41](#q41) — d.** A change in one class forces changes in other classes, and testing in isolation becomes hard
+
+With tight coupling, classes know too much about each other, so changes ripple from one class to another, and you can't test one class without bringing the others along.
+
+**[Q42](#q42) — d.** Compile-time error, because Person has no parameterless constructor and Student does not call base(...)
+
+Every child constructor calls a parent constructor first. Without `: base(...)`, C# tries to call `Person()` with no arguments, which doesn't exist, so it won't compile. The fix is `public Student() : base("name") { }`.
+
+**[Q43](#q43) — e.** Use composition: `Traveller` has a private `Passport` field and calls `passport.IsExpired()`
+
+A Traveller **has a** passport; it is not a passport. Use composition (keep a `Passport` field) instead of inheritance. Rule of thumb: is-a → inheritance, has-a → composition.
+
+**[Q44](#q44) — d.** Sequential cohesion
+
+Each method's output is the next method's input, like an assembly line. That's sequential cohesion.
+
+**[Q45](#q45) — d.** Parent: `virtual` (or `abstract`). Child: `override`
+
+The parent must allow overriding with `virtual` (or `abstract`, which forces it). The child uses `override`. Without `virtual`, the child can only hide the method with `new`.
+
+**[Q46](#q46) — a.** Low cohesion and a violation of SRP; it should be split into separate classes for loading, formatting and sending
+
+Loading, formatting and emailing are three jobs that change for different reasons. The class has low cohesion and breaks SRP. Split it into a loader, a formatter and a sender.
+
+**[Q47](#q47) — a.** Single Responsibility Principle
+
+`Invoice` has three jobs: calculating, saving and printing. A change to the database or to the PDF layout would both force edits to `Invoice`. Split it into separate classes.
+
+**[Q48](#q48) — b.** B
+
+Field initialisers run **before** any constructor, including the parent's, so `name` is already `"B"`. The `A` constructor then calls `Show()`, which is virtual, so `B.Show()` runs and prints `B`. Only after that does the `B` constructor body set `name` to `"C"`.
