@@ -1,15 +1,16 @@
 # Cohesion
 
-Cohesion measures how closely related the things **inside one class** are. Do its fields and methods all work towards the same job?
+Cohesion is **the degree to which the members of a class work together to fulfil a single, well-defined responsibility**.
 
 > [!IMPORTANT]
-> Aim for **high cohesion**: one class, one focused job. This is the same idea as S in [SOLID](SOLID.md).
+> A class should have **one responsibility** and **one reason to change**. If a class has more responsibilities, SRP is violated (S in [SOLID](SOLID.md)). The same idea applies to methods, on a smaller scale.
 
 ---
 
 #### TOC
 
-- [The 7 types, worst to best](#the-7-types-worst-to-best)
+- [High vs low cohesion](#high-vs-low-cohesion)
+- [The 7 types](#the-7-types)
 - [Coincidental cohesion](#coincidental-cohesion)
 - [Logical cohesion](#logical-cohesion)
 - [Temporal cohesion](#temporal-cohesion)
@@ -21,40 +22,42 @@ Cohesion measures how closely related the things **inside one class** are. Do it
 
 ---
 
-## The 7 types, worst to best
+## High vs low cohesion
+
+| Advantages of **high** cohesion                                                     | Disadvantages of **low** cohesion                                                     |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **Improved readability**: clear, focused classes with a single, well-defined responsibility | **Increased code duplication**: members that belong together get split across classes |
+| **Better error isolation**: a change is less likely to affect other parts           | **Reduced functionality**: classes without a single responsibility, holding members that don't belong together |
+| **Improved reliability**: less prone to errors, works more consistently              | **Hard to understand**: harder to tell what each class is responsible for             |
+
+## The 7 types
 
 ```mermaid
 flowchart LR
     A[Coincidental] --> B[Logical] --> C[Temporal] --> D[Procedural] --> E[Communicational] --> F[Sequential] --> G[Functional]
-    style A fill:#f8d7da,stroke:#c0392b
-    style B fill:#f8d7da,stroke:#c0392b
-    style C fill:#fff3cd,stroke:#b7950b
-    style D fill:#fff3cd,stroke:#b7950b
-    style E fill:#fff3cd,stroke:#b7950b
-    style F fill:#d4edda,stroke:#1e8449
     style G fill:#d4edda,stroke:#1e8449
 ```
 
-_Red = bad, yellow = okay, green = good._
+_Functional (green) is the best kind._
 
 > [!TIP]
-> To spot the type, ask: **why** are these methods in the same class?
+> To spot the type, ask: **why** are these members in the same class?
 
-| Type            | Grouped because...                          |
-| --------------- | ------------------------------------------- |
-| Coincidental    | No reason, they just ended up there         |
-| Logical         | They're the same _kind_ of thing            |
-| Temporal        | They run at the same _time_                 |
-| Procedural      | They run in a fixed _order_                 |
-| Communicational | They use the same _data_                    |
-| Sequential      | One's _output_ is the next one's _input_    |
-| Functional      | They all do _one single job_                |
+| Type            | Grouped because...                                   |
+| --------------- | ---------------------------------------------------- |
+| Coincidental    | No conceptual relationship at all                    |
+| Logical         | Logically related, but not functionally related      |
+| Temporal        | They're executed at the same _time_                  |
+| Procedural      | They always happen in a specific _order_             |
+| Communicational | They operate on the same _data_                      |
+| Sequential      | One's _output_ becomes the next one's _input_        |
+| Functional      | They all contribute to _one well-defined job_        |
 
 ## Coincidental cohesion
 
 Coincidental cohesion is:
 
-- Methods grouped for **no real reason**. The worst kind.
+- Class members with **no conceptual relationship**.
 - In other words, the classic `Utils` / `Helpers` dumping ground.
 
 _Example:_
@@ -73,8 +76,7 @@ In the above example, dates, tax and email have nothing in common. Each method s
 
 Logical cohesion is:
 
-- Methods grouped because they're the same **kind** of thing, and a **flag** picks which one runs.
-- In other words, they look related, but they don't actually work together.
+- Members that are **logically related** (the same kind of thing), but **not functionally related** (they don't work together).
 
 _Example:_
 
@@ -88,13 +90,13 @@ class InputHandler {
 }
 ```
 
-In the above example, keyboard, file and network input are all "input", but share no code or data. The flag is also **control coupling** (see [Coupling](Coupling.md)).
+In the above example, keyboard, file and network are all "input", but they share no code or data. The `source` flag is also **control coupling** (see [Coupling](Coupling.md)).
 
 ## Temporal cohesion
 
 Temporal cohesion is:
 
-- Methods grouped because they run at the **same time**, e.g. at start-up or shut-down.
+- Members grouped because they're **executed at the same time**, e.g. at start-up.
 
 _Example:_
 
@@ -114,7 +116,7 @@ In the above example, logging, config and database have nothing in common except
 
 Procedural cohesion is:
 
-- Methods grouped because they must run in a **fixed order**, but they **don't pass data** to each other.
+- Statements grouped in a single method because they **always happen in a specific order**, even though they work on different things.
 
 _Example:_
 
@@ -128,13 +130,13 @@ class LoginFlow {
 }
 ```
 
-In the above example, the steps follow an order, but each one works on different data.
+In the above example, the steps follow an order, but they don't pass data to each other.
 
 ## Communicational cohesion
 
 Communicational cohesion is:
 
-- Methods grouped because they all work on the **same data**.
+- Members grouped because they **operate on the same data**.
 
 _Example:_
 
@@ -154,7 +156,7 @@ In the above example, every method uses the same `customer`. That's a real link,
 
 Sequential cohesion is:
 
-- Methods grouped because the **output** of one is the **input** of the next, like an assembly line.
+- The **output** of one member becomes the **input** of another, like an assembly line.
 
 _Example:_
 
@@ -174,7 +176,7 @@ In the above example, the data flows from one step to the next. Compare this wit
 
 Functional cohesion is:
 
-- Every field and method contributes to **one single, well-defined job**. The best kind.
+- **All members contribute to a single, well-defined responsibility**. The best kind.
 
 _Example:_
 
@@ -194,7 +196,11 @@ In the above example, everything in the class exists to calculate tax. Nothing c
 
 ## Fixing low cohesion
 
-The fix is almost always the same: **split the class by job**.
+The lecture gives 2 refactorings: **extract class** and **extract method**.
+
+### Extract class
+
+Split a class that does several jobs into one class per job.
 
 _Example:_
 
@@ -223,3 +229,46 @@ class EmailSender {
 ```
 
 In the above example, the bad class changes whenever the database, the HTML layout **or** the email setup changes. After the split, each class has one job and one reason to change.
+
+### Extract method
+
+Split a method that does several things into smaller methods, each with one job.
+
+_Example:_
+
+```csharp
+// -------- Bad practice ---------
+public void PrintInvoice(Invoice invoice) {
+    Console.WriteLine("INVOICE");
+    Console.WriteLine("-------");
+
+    double total = 0;
+    foreach (Item item in invoice.Items) {
+        total += item.Price;
+    }
+    Console.WriteLine("Total: " + total);
+}
+```
+
+```csharp
+// -------- Good practice ---------
+public void PrintInvoice(Invoice invoice) {
+    PrintHeader();
+    PrintTotal(invoice);
+}
+
+private void PrintHeader() {
+    Console.WriteLine("INVOICE");
+    Console.WriteLine("-------");
+}
+
+private void PrintTotal(Invoice invoice) {
+    double total = 0;
+    foreach (Item item in invoice.Items) {
+        total += item.Price;
+    }
+    Console.WriteLine("Total: " + total);
+}
+```
+
+In the above example, the bad method mixes printing the header with calculating the total. After extracting, each method does one thing and its name says what.

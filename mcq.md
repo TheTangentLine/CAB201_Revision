@@ -243,13 +243,29 @@ obj.Show();
 
 ### Q17
 
-Which type of coupling is the loosest (most desirable)?
+In the code below, `Print()` crashes with a `NullReferenceException` if `Load()` has not been called first. Which type of coupling is this?
+
+```csharp
+class SalesReport {
+    private List<Sale> sales;
+
+    public void Load(List<Sale> sales) {
+        this.sales = sales;
+    }
+    public void Print() {
+        foreach (Sale sale in sales) { /* ... */ }
+    }
+}
+
+SalesReport report = new SalesReport();
+report.Print();
+```
 
 **a.** Content coupling\
 **b.** Common coupling\
 **c.** Control coupling\
 **d.** Stamp coupling\
-**e.** Data coupling
+**e.** Temporal coupling
 
 ### Q18
 
@@ -784,9 +800,9 @@ A `Penguin` can't stand in for a `Bird` if every `Bird` can fly, which breaks LS
 
 A child must work anywhere the parent works. `StudentAccount` adds a stricter rule (max 100) that callers of `BankAccount` don't expect, so swapping it in breaks their code. That breaks LSP.
 
-**[Q17](#q17) — e.** Data coupling
+**[Q17](#q17) — e.** Temporal coupling
 
-Data coupling means modules only share the simple data they need, such as `int` or `string` parameters. From worst to best: content, common, control, stamp, data.
+`Print()` only works if `Load()` was called first, so the caller has to remember the right order. That's temporal coupling. The fix is to use constructors and methods to force the order, e.g. pass the sales into the constructor so a report can't exist without them.
 
 **[Q18](#q18) — e.** Compile-time error, because an `out` parameter must be assigned before the method returns
 
@@ -842,7 +858,7 @@ The parts are grouped because they're the same *kind* of thing (input), and a fl
 
 **[Q31](#q31) — d.** Content coupling
 
-One class reaching into another's private internals is content coupling, the tightest (worst) kind. Any change inside `B` can break `A`.
+One class reaching into another's internal data is content coupling. Any change inside `B` can break `A`. The fix is encapsulation: only `B` should change its own data, through its own methods.
 
 **[Q32](#q32) — c.** Temporal cohesion
 
@@ -878,7 +894,7 @@ Overloads are chosen at **compile time** from the **declared** type. `pet` is de
 
 **[Q40](#q40) — b.** Common coupling
 
-Several classes share a global (static) variable, so a change made in one place affects all of them. That's common coupling. Passing a repository in through an interface would fix it.
+Several classes share a global (static) variable, so a change made in one place affects all of them. That's common coupling. The fix is encapsulation and data ownership: one class owns the list privately, and the others go through its methods.
 
 **[Q41](#q41) — d.** A change in one class forces changes in other classes, and testing in isolation becomes hard
 
