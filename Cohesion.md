@@ -32,14 +32,6 @@ Cohesion is **the degree to which the members of a class work together to fulfil
 
 ## The 7 types
 
-```mermaid
-flowchart LR
-    A[Coincidental] --> B[Logical] --> C[Temporal] --> D[Procedural] --> E[Communicational] --> F[Sequential] --> G[Functional]
-    style G fill:#d4edda,stroke:#1e8449
-```
-
-_Functional (green) is the best kind._
-
 > [!TIP]
 > To spot the type, ask: **why** are these members in the same class?
 
